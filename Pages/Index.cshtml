@@ -1,0 +1,172 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<title>Recunoaștere Obiecte</title>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        background-color: #f4f4f9;
+        color: #333;
+        padding: 20px;
+    }
+
+    h1 {
+        color: #007bff;
+    }
+
+    button, input {
+        padding: 12px 20px;
+        margin: 10px;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    button {
+        background-color: #007bff;
+        color: white;
+    }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+    input[type="file"] {
+        background-color: white;
+        border: 1px solid #ddd;
+    }
+
+    video, canvas {
+        display: none;
+    }
+
+    .image-container {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin-top: 30px;
+        flex-wrap: wrap;
+    }
+
+    .image-column {
+        background: white;
+        padding: 15px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        width: 45%;
+        min-width: 300px;
+    }
+
+    img {
+        max-width: 100%;
+        border-radius: 5px;
+        margin-top: 10px;
+    }
+
+    #loadingMessage {
+        display: none;
+        font-size: 18px;
+        color: #666;
+    }
+
+    .hidden {
+        display: none;
+    }
+</style>
+<body>
+    <h1>Recunoaștere Obiecte</h1>
+    <button onclick="startCamera()">Deschide Camera</button>
+    <video id="camera" autoplay playsinline></video>
+    <canvas id="snapshotCanvas"></canvas>
+    <button onclick="captureImage()">Capturează Poză</button>
+    <input type="file" accept="image/*" id="fileInput">
+    <label>
+        <input type="radio" name="showProcessedImage" id="showProcessedImage" />
+        Afișează imaginea procesată
+    </label>
+    <div class="image-container">
+        <div class="image-column">
+            <h3>Imaginea Inițială</h3>
+            <img id="initialImage" class="hidden" alt="Imagine Inițială">
+        </div>
+        <div class="image-column">
+            <h3>Rezultatul Procesării</h3>
+            <p id="resultText" style="font-weight: bold;"></p>
+            <div id="loadingMessage">Procesare în curs...</div>
+            <img id="processedImage" class="hidden" alt="Imagine Procesată" />
+        </div>
+    </div>
+</body>
+<script>
+    const video = document.getElementById('camera');
+    const canvas = document.getElementById('snapshotCanvas');
+    const ctx = canvas.getContext('2d');
+    let image = "";
+
+    document.getElementById('fileInput').addEventListener('change', function(event) {
+        // Curățăm orice text existent și afișăm mesajul de încărcare
+        document.getElementById('resultText').innerText = '';
+        document.getElementById('processedImage').style.display = "none"; // Ascundem imaginea procesată la început
+
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                image = e.target.result;
+                document.getElementById('initialImage').src = image; // Afișează imaginea încărcată
+                document.getElementById('initialImage').style.display = "block"; // Face imaginea vizibilă
+                document.getElementById('resultText').innerText = 'se proceseaza imaginea...';
+                await sendImage(image);  // Trimite imaginea la server
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    async function sendImage(image) {
+        const url = 'http://localhost:7109/ImageRecognition/DetectShapes';
+        const returnImage = document.getElementById('showProcessedImage').checked;
+        const data = {
+            Image: image
+        };
+
+        try {
+            const response = await fetch(url + `?returnImage=${returnImage}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const result = await response.json();
+            console.log('Success:', result);
+
+
+            // Afișăm rezultatul procesării
+            const resultTextElement = document.getElementById("resultText");
+            resultTextElement.innerText = result.resulttext || 'Nimic nu a fost detectat.';
+
+            if (document.getElementById('showProcessedImage').checked) {
+                const processedImageElement = document.getElementById('processedImage');
+                processedImageElement.src = result.image; // Setăm imaginea procesată
+                processedImageElement.style.display = "block"; // O facem vizibilă
+            }
+
+            return result;
+        } catch (error) {
+            console.error('Error:', error);
+            document.getElementById('resultText').innerText = 'Eroare la procesarea imaginii. Te rugăm să încerci din nou.' + error;
+        }
+    }
+</script>
