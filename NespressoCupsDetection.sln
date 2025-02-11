@@ -5,7 +5,7 @@ VisualStudioVersion = 17.12.35506.116 d17.12
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NespressoCupsDetection", "NespressoCupsDetection.csproj", "{1E14789D-0B41-45F8-AF5D-38F46C7FE3EE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectDetectionService", "..\ObjectDetectionService\ObjectDetectionService.csproj", "{A455E310-19D1-4487-A7B4-05CD80863504}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecImage", "..\RecImage\RecImage.csproj", "{F5373A77-B58E-4E74-A7E0-D7C1499E720C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{1E14789D-0B41-45F8-AF5D-38F46C7FE3EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1E14789D-0B41-45F8-AF5D-38F46C7FE3EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1E14789D-0B41-45F8-AF5D-38F46C7FE3EE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A455E310-19D1-4487-A7B4-05CD80863504}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A455E310-19D1-4487-A7B4-05CD80863504}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A455E310-19D1-4487-A7B4-05CD80863504}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A455E310-19D1-4487-A7B4-05CD80863504}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F5373A77-B58E-4E74-A7E0-D7C1499E720C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F5373A77-B58E-4E74-A7E0-D7C1499E720C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F5373A77-B58E-4E74-A7E0-D7C1499E720C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F5373A77-B58E-4E74-A7E0-D7C1499E720C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
